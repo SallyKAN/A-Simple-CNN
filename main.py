@@ -8,7 +8,9 @@ import numpy as np
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import time as time
-from Net import Net
+# from Net import Net
+from torchvision.datasets import ImageFolder
+import os
 
 
 def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
@@ -21,8 +23,8 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
     for epoch in range(epoches):  # loop over the dataset multiple times
         sheduler.step()
         train_running_loss = 0.0
-        for param_group in optimizer.param_groups:
-            print(param_group['lr'])
+        # for param_group in optimizer.param_groups:
+        #     print(param_group['lr'])
         for i, data in enumerate(train_loader, 0):
             # get the inputs
             inputs, labels = data
@@ -155,28 +157,28 @@ def eval_net(net, testloader):
 
 def get_dataloders(batch_size):
     # transform = transforms.ToTensor()
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                            download=True, transform=train_transform)
-    valid_dataset = torchvision.datasets.CIFAR10(
-        root='./data', train=True,
-        download=True, transform=val_transform,
-    )
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                           download=True, transform=test_transform)
+    # trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+    #                                         download=True, transform=train_transform)
+    trainset = ImageFolder('PyTorch/release/train', transform=train_transform)
+    valid_dataset = ImageFolder('PyTorch/release/train', transform=train_transform)
+    # testset = torchvision.datasets.CIFAR10(root='./data', train=False,
+    #                                        download=True, transform=test_transform)
+    testset = ImageFolder('PyTorch/release/val', transform=test_transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
-                                             shuffle=False, num_workers=2,)
-    classes = ('plane', 'car', 'bird', 'cat',
-               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+                                             shuffle=False, num_workers=2)
+
     data_indexs = list(range(len(trainset)))
-    valid_size = 5000
+    valid_size = 200
     np.random.shuffle(data_indexs)
     train_index, val_index = data_indexs[valid_size:], data_indexs[:valid_size]
 
     train_sampler = SubsetRandomSampler(train_index)
-    train_loader = torch.utils.data.DataLoader(
-        trainset, batch_size=batch_size, sampler=train_sampler,
-        num_workers=2)
     valid_sampler = SubsetRandomSampler(val_index)
+
+    train_loader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
+                                               sampler=train_sampler,
+                                               num_workers=2)
+
     valid_loader = torch.utils.data.DataLoader(
         valid_dataset, batch_size=batch_size, sampler=valid_sampler,
         num_workers=2)
@@ -209,54 +211,58 @@ def plot_loss_and_accur(batch_size, lr, epoches,train_losses,val_losses,test_acc
     plt.show()
     plt.tight_layout(pad=0.5, w_pad=1, h_pad=1)
 
+
 if __name__ == '__main__':
+    dirpath = os.getcwd()
+    print("current directory is : " + dirpath)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     best_acc = 0  # best test accuracy
     lr = 0.001
-    batch_size = 32
-    epoches = 25
+    batch_size = 8
+    epoches = 10
     train_losses_dic = {}
     val_losses_dic = {}
     test_accuracies_dic = {}
     val_accuracies_dic = {}
     # Data
     print('==> Preparing data..')
-    normalize = transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    )
-    resize = transforms.Resize((48,48))
+    # resize = transforms.Resize((48,48))
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-         transforms.RandomAffine(10,translate=(0.1,0.1)),
-         resize,
-         transforms.ToTensor(),
-         normalize,
+            transforms.RandomSizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
         ])
     test_transform = transforms.Compose(
                 [
-                    resize,
+                    # resize,
+                    transforms.RandomCrop(224),
                     transforms.ToTensor(),
                     normalize,
                  ])
     val_transform = transforms.Compose(
                 [
-                   resize,
-                   transforms.ToTensor(),
-                   normalize,
+                    transforms.RandomSizedCrop(224),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                    normalize,
                  ])
     train_loader, val_loader, testloader = get_dataloders(batch_size)
     print(train_loader.batch_size)
     # Model
     print('==> Building model..')
-    net = Net()
+    # net = Net()
+    net = torchvision.models.resnet18(pretrained=True)
     # net = ModNet()
     mode = 'modified'
     net = net.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0.0005)
-    # scheduler = StepLR(optimizer, step_size=12, gamma=1)
-    scheduler = StepLR(optimizer, step_size=12, gamma=0.8)
+    scheduler = StepLR(optimizer, step_size=12, gamma=1)
+    # scheduler = StepLR(optimizer, step_size=12, gamma=0.8)
     train_losses, val_losses, test_accuracies, val_accuracies = train(mode,device,scheduler,
                                                                       epoches, train_loader,
                                                                       val_loader, testloader)

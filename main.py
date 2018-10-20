@@ -8,7 +8,6 @@ import numpy as np
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import time as time
-# from Net import Net
 from torchvision.datasets import ImageFolder
 import os
 
@@ -18,7 +17,6 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
     val_losses = []
     test_accuracies = []
     val_accuracies = []
-    best_acc = 0
     t0 = time.time()
     for epoch in range(epoches):  # loop over the dataset multiple times
         sheduler.step()
@@ -59,8 +57,6 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
         print('%dth epoch, train loss: %.3f, validation loss:%.3f' %(epoch + 1,train_loss,val_loss))
         val_accuracy = eval_net(net, val_loader)
         test_accuracy = eval_net(net, testloader)
-        if test_accuracy > best_acc:
-            best_acc = test_accuracy
         test_accuracies.append(test_accuracy)
         val_accuracies.append(val_accuracy)
         if mode == 'baseline':
@@ -68,7 +64,7 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
         elif mode == 'modified':
             torch.save(net.state_dict(), 'modified.pth')
     print('Finished Training，take %.3f mins'% ((time.time() - t0)/60))
-    print('Best test Acc: {:4f}'.format(best_acc))
+    print('test Acc: {:4f}'.format(test_accuracy))
     return train_losses, val_losses,test_accuracies,val_accuracies
 
 

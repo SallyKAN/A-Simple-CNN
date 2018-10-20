@@ -41,4 +41,4 @@ The model architecture is highlihted as below:
 * [10] FC4 neurons (class scores)
 
 ## Evaluation
-![img](/accr.png)
+![img](accur.png)

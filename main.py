@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import time as time
 from torchvision.datasets import ImageFolder
 import argparse
+import torchvision.models as models
 import os
 
 
@@ -221,6 +222,9 @@ if __name__ == '__main__':
                         help='momentum')
     parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)')
+    parser.add_argument('--model', type=str, required=True)
+    parser.add_argument('--pretrained', dest='pretrained', action='store_true',
+                        help='use pre-trained model')
     global args, best_prec1
     args = parser.parse_args()
 
@@ -264,7 +268,34 @@ if __name__ == '__main__':
     # Model
     print('==> Building model..')
     print('Batch size: %d, lr: %.5f, epoches: %d'%(batch_size,lr,epoches))
-    net = torchvision.models.resnet18(pretrained=True)
+    # net = torchvision.models.resnet18(pretrained=True)
+    model = {
+        'alexnet': models.alexnet(),
+        'vgg16': models.vgg16,
+        'vgg16_bn': models.vgg16_bn,
+        'vgg11': models.vgg11,
+        'vgg13': models.vgg13,
+        'vgg16': models.vgg16,
+        'vgg19': models.vgg19,
+        'squeezenet': models.squeezenet1_0,
+        'densenet121': models.densenet161,
+        'densenet169': models.densenet169,
+        'densenet161': models.densenet161,
+        'densenet201': models.densenet201,
+        'resnet18': models.resnet18,
+        'resnet34': models.resnet34,
+        'resnet101': models.resnet101,
+        'resnet152': models.resnet152,
+        'inception_v3': models.inception_v3
+    }
+
+    if args.pretrained:
+        print("=> using pre-trained model '{}'".format(args.model))
+        net = model[args.model](pretrained=True)
+    else:
+        print("=> using pre-trained model '{}'".format(args.model))
+        net = model[args.model]()
+
     mode = 'modified'
     net = net.to(device)
     criterion = nn.CrossEntropyLoss()

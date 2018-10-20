@@ -9,6 +9,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import time as time
 from torchvision.datasets import ImageFolder
+import argparse
 import os
 
 
@@ -155,11 +156,11 @@ def get_dataloders(batch_size):
     # transform = transforms.ToTensor()
     # trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
     #                                         download=True, transform=train_transform)
-    trainset = ImageFolder('PyTorch/release/train', transform=train_transform)
-    valid_dataset = ImageFolder('PyTorch/release/train', transform=train_transform)
+    trainset = ImageFolder('./release/train', transform=train_transform)
+    valid_dataset = ImageFolder('./release/train', transform=train_transform)
     # testset = torchvision.datasets.CIFAR10(root='./data', train=False,
     #                                        download=True, transform=test_transform)
-    testset = ImageFolder('PyTorch/release/val', transform=test_transform)
+    testset = ImageFolder('./release/val', transform=test_transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                              shuffle=False, num_workers=2)
 
@@ -209,13 +210,24 @@ def plot_loss_and_accur(batch_size, lr, epoches,train_losses,val_losses,test_acc
 
 
 if __name__ == '__main__':
-    dirpath = os.getcwd()
-    print("current directory is : " + dirpath)
+    parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
+    parser.add_argument('--epochs', default=90, type=int, metavar='N',
+                        help='number of total epochs to run')
+    parser.add_argument('-b', '--batch-size', default=256, type=int,
+                        metavar='N', help='mini-batch size (default: 256)')
+    parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
+                        metavar='LR', help='initial learning rate')
+    parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
+                        help='momentum')
+    parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
+                        metavar='W', help='weight decay (default: 1e-4)')
+    global args, best_prec1
+    args = parser.parse_args()
+
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    best_acc = 0  # best test accuracy
-    lr = 0.001
-    batch_size = 8
-    epoches = 10
+    lr = args.lr
+    batch_size = args.batch_size
+    epoches = args.epochs
     train_losses_dic = {}
     val_losses_dic = {}
     test_accuracies_dic = {}
@@ -250,19 +262,18 @@ if __name__ == '__main__':
     print(train_loader.batch_size)
     # Model
     print('==> Building model..')
-    # net = Net()
+    print('Batch size: %d, lr: %.5f, epoches: %d'%(batch_size,lr,epoches))
     net = torchvision.models.resnet18(pretrained=True)
-    # net = ModNet()
     mode = 'modified'
     net = net.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0.0005)
     scheduler = StepLR(optimizer, step_size=12, gamma=1)
     # scheduler = StepLR(optimizer, step_size=12, gamma=0.8)
-    train_losses, val_losses, test_accuracies, val_accuracies = train(mode,device,scheduler,
+    train_losses, val_losses, test_accuracies, val_accuracies = train(mode, device, scheduler,
                                                                       epoches, train_loader,
                                                                       val_loader, testloader)
 
-    plot_loss_and_accur(batch_size, lr, epoches, train_losses,val_losses,test_accuracies,val_accuracies)
+    # plot_loss_and_accur(batch_size, lr, epoches, train_losses,val_losses,test_accuracies,val_accuracies)
 
 

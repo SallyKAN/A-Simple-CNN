@@ -247,7 +247,8 @@ if __name__ == '__main__':
     test_transform = transforms.Compose(
                 [
                     # resize,
-                    transforms.RandomCrop(224),
+                    transforms.Scale(256),
+                    transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     normalize,
                  ])

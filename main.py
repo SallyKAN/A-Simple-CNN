@@ -55,11 +55,11 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
             val_running_loss += loss.item()
         val_loss = val_running_loss/len(val_loader)
         val_losses.append(val_loss)
-        print('%dth epoch, train loss: %.3f, validation loss:%.3f' %(epoch + 1,train_loss,val_loss))
         val_accuracy = eval_net(net, val_loader)
         test_accuracy = eval_net(net, testloader)
         test_accuracies.append(test_accuracy)
         val_accuracies.append(val_accuracy)
+        print('%dth epoch, train loss: %.3f, validation loss:%.3f, test accur:%.4f' % (epoch + 1, train_loss, val_loss,test_accuracy))
         if mode == 'baseline':
             torch.save(net.state_dict(), 'baseline.pth')
         elif mode == 'modified':

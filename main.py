@@ -239,7 +239,7 @@ if __name__ == '__main__':
                                      std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-            transforms.RandomSizedCrop(224),
+            transforms.RandomResizedCrop (224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
@@ -254,7 +254,7 @@ if __name__ == '__main__':
                  ])
     val_transform = transforms.Compose(
                 [
-                    transforms.RandomSizedCrop(224),
+                    transforms.RandomResizedCrop (224),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,

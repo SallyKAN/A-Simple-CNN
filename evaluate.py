@@ -53,10 +53,12 @@ def create_logger(final_output_path):
     return clogger
 
 def eval_net(net, loader, logging):
-    net = net.eval()
+
     if args.cuda:
         net = net.cuda()
-    net.module.load_state_dict(torch.load('./vgg19_best_accur.pth'))
+    net = nn.DataParallel(net, 1)
+    net.load_state_dict(torch.load('./vgg19_best_accur.pth'))
+    net = net.eval()
     correct = 0
     total = 0
     for data in loader:

@@ -8,6 +8,7 @@ import time
 import os
 import numpy as np
 from torchvision.datasets import ImageFolder
+from collections import OrderedDict
 
 import torch
 from torch import nn
@@ -56,7 +57,11 @@ def eval_net(net, loader, logging):
     if args.cuda:
         net = net.cuda()
     checkpoint = torch.load(args.load_path)
-    net.load_state_dict(checkpoint)
+    new_state_dict = OrderedDict()
+    for k, v in checkpoint.items():
+        name = k[7:]  # remove module.
+    new_state_dict[name] = v
+    net.load_state_dict(new_state_dict)
     epoch = checkpoint['epoch']
     best_prec1 = checkpoint['best_prec1']
     net.load_state_dict(checkpoint['state_dict'])

@@ -29,7 +29,7 @@ def parse_args():
         help='Used when there are cuda installed.')
     parser.add_argument('--output_path', default='./', type=str,
         help='The path that stores the log files.')
-    parser.add_argument('--load_path',default='model_best.pth.tar',type=str)
+    parser.add_argument('--load_path',default=None,type=str)
     parser.add_argument('-b', '--batch-size', default=16, type=int,
                         metavar='N', help='mini-batch size (default: 16)')
     pargs = parser.parse_args()
@@ -56,18 +56,7 @@ def eval_net(net, loader, logging):
     net = net.eval()
     if args.cuda:
         net = net.cuda()
-    checkpoint = torch.load(args.load_path)
-    new_state_dict = OrderedDict()
-    for k, v in checkpoint.items():
-        name = k[7:]  # remove module.
-    new_state_dict[name] = v
-    net.load_state_dict(new_state_dict)
-    epoch = checkpoint['epoch']
-    best_prec1 = checkpoint['best_prec1']
-    net.load_state_dict(checkpoint['state_dict'])
-    print("=> best prediction'{}' (epoch {})"
-          .format(best_prec1, checkpoint['epoch']))
-
+    net.load_state_dict(torch.load(args.output_path))
     correct = 0
     total = 0
     for data in loader:

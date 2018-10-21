@@ -61,7 +61,8 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
         test_accuracies.append(test_accuracy)
         val_accuracies.append(val_accuracy)
         print('%dth epoch, train loss: %.3f, validation loss:%.3f, test accur:%.4f' % (epoch + 1, train_loss, val_loss,test_accuracy))
-        if best_accur > test_accuracy:
+        if test_accuracy > best_accur:
+            best_accur = test_accuracy
             torch.save(net.state_dict(), 'best_accur.pth')
     print('Finished Training，take %.3f mins'% ((time.time() - t0)/60))
     print('test Acc: {:4f}'.format(test_accuracy))

@@ -20,11 +20,11 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
     test_accuracies = []
     val_accuracies = []
     t0 = time.time()
+    best_accur = 0
     for epoch in range(epoches):  # loop over the dataset multiple times
         sheduler.step()
         train_running_loss = 0.0
-        # for param_group in optimizer.param_groups:
-        #     print(param_group['lr'])
+
         for i, data in enumerate(train_loader, 0):
             # get the inputs
             inputs, labels = data
@@ -61,10 +61,8 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
         test_accuracies.append(test_accuracy)
         val_accuracies.append(val_accuracy)
         print('%dth epoch, train loss: %.3f, validation loss:%.3f, test accur:%.4f' % (epoch + 1, train_loss, val_loss,test_accuracy))
-        if mode == 'baseline':
-            torch.save(net.state_dict(), 'baseline.pth')
-        elif mode == 'modified':
-            torch.save(net.state_dict(), 'modified.pth')
+        if best_accur > test_accuracy:
+            torch.save(net.state_dict(), 'best_accur.pth')
     print('Finished Training，take %.3f mins'% ((time.time() - t0)/60))
     print('test Acc: {:4f}'.format(test_accuracy))
     return train_losses, val_losses,test_accuracies,val_accuracies

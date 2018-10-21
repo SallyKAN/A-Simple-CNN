@@ -56,8 +56,9 @@ def eval_net(net, loader, logging):
 
     if args.cuda:
         net = net.cuda()
-    net = nn.DataParallel(net, 1)
+    net = torch.nn.DataParallel(net)
     net.load_state_dict(torch.load('./vgg19_best_accur.pth'))
+    net = torch.nn.DataParallel(net)
     net = net.eval()
     correct = 0
     total = 0

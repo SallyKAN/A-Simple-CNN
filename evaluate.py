@@ -56,7 +56,7 @@ def eval_net(net, loader, logging):
     net = net.eval()
     if args.cuda:
         net = net.cuda()
-    net.load_state_dict(torch.load('./vgg19_best_accur.pth'))
+    net.module.load_state_dict(torch.load('./vgg19_best_accur.pth'))
     correct = 0
     total = 0
     for data in loader:

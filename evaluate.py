@@ -56,7 +56,7 @@ def eval_net(net, loader, logging):
     net = net.eval()
     if args.cuda:
         net = net.cuda()
-    net.load_state_dict(torch.load(args.output_path))
+    net.load_state_dict(torch.load(args.output_path,map_location='cuda'))
     correct = 0
     total = 0
     for data in loader:

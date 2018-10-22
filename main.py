@@ -263,10 +263,10 @@ if __name__ == '__main__':
                     normalize,
                  ])
     train_loader, val_loader, testloader = get_dataloders(batch_size)
-    print(train_loader.batch_size)
+    # print(train_loader.batch_size)
     # Model
     print('==> Building model..')
-    print('Batch size: %d, lr: %.5f, epoches: %d'%(batch_size,lr,epoches))
+    print('Batch size: %d, lr: %.5f, epoches: %d' % (batch_size, lr,epoches))
     # net = torchvision.models.resnet18(pretrained=True)
     model = {
         'alexnet': models.alexnet(),
@@ -277,6 +277,8 @@ if __name__ == '__main__':
         'vgg16': models.vgg16,
         'vgg19': models.vgg19,
         'squeezenet': models.squeezenet1_0,
+        'densenet34': models.densenet34,
+        'densenet50': models.densenet50,
         'densenet121': models.densenet161,
         'densenet169': models.densenet169,
         'densenet161': models.densenet161,

@@ -277,8 +277,6 @@ if __name__ == '__main__':
         'vgg16': models.vgg16,
         'vgg19': models.vgg19,
         'squeezenet': models.squeezenet1_0,
-        'densenet34': models.densenet34,
-        'densenet50': models.densenet50,
         'densenet121': models.densenet161,
         'densenet169': models.densenet169,
         'densenet161': models.densenet161,

@@ -29,7 +29,7 @@ def parse_args():
         help='Used when there are cuda installed.')
     parser.add_argument('--output_path', default='./', type=str,
         help='The path that stores the log files.')
-    # parser.add_argument('--load_path',default=None,type=str)
+    parser.add_argument('--load_path',default= './vgg16_best_accur.pth',type=str)
     parser.add_argument('-b', '--batch-size', default=16, type=int,
                         metavar='N', help='mini-batch size (default: 16)')
     pargs = parser.parse_args()
@@ -56,7 +56,7 @@ def eval_net(net, loader, logging):
     net = net.eval()
     if args.cuda:
         net = net.cuda()
-    net.load_state_dict(torch.load('./vgg16_best_accur.pth',map_location='cuda'))
+    net.load_state_dict(torch.load(args.load_path,map_location='cuda'))
 
     correct = 0
     total = 0

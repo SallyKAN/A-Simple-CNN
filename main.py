@@ -283,6 +283,7 @@ if __name__ == '__main__':
         'densenet201': models.densenet201,
         'resnet18': models.resnet18,
         'resnet34': models.resnet34,
+        'resnet50': models.resnet50,
         'resnet101': models.resnet101,
         'resnet152': models.resnet152,
         'inception_v3': models.inception_v3

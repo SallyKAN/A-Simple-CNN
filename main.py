@@ -13,6 +13,7 @@ import argparse
 import torchvision.models as models
 from vgg import VGG
 import os
+import pytorch_vgg
 
 
 def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
@@ -248,7 +249,7 @@ if __name__ == '__main__':
                                      std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-            transforms.RandomResizedCrop(224),
+            transforms.RandomResizedCrop(448),
             # transforms.Resize(256),
             # transforms.CenterCrop(224),
             # transforms.RandomResizedCrop(299),
@@ -261,8 +262,8 @@ if __name__ == '__main__':
                     # transforms.Resize(300),
                     # transforms.CenterCrop(299),
                     # transforms.RandomResizedCrop(512),
-                    transforms.Resize(256),
-                    transforms.CenterCrop(224),
+                    transforms.Resize(512),
+                    transforms.CenterCrop(448),
                     transforms.ToTensor(),
                     normalize,
                  ])
@@ -270,7 +271,7 @@ if __name__ == '__main__':
                 [
                     # transforms.Resize(256),
                     # transforms.CenterCrop(224),
-                    transforms.RandomResizedCrop(224),
+                    transforms.RandomResizedCrop(448),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,
@@ -290,6 +291,7 @@ if __name__ == '__main__':
         'vgg16': models.vgg16,
         'vgg19': models.vgg19,
         'vgg19_2': VGG('VGG19'),
+        'vgg19_3': pytorch_vgg.vgg19,
         'squeezenet': models.squeezenet1_0,
         'densenet121': models.densenet161,
         'densenet169': models.densenet169,

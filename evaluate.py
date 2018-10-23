@@ -107,9 +107,9 @@ normalize = transforms.Normalize(
 
 test_transform = transforms.Compose(
                 [
-                    # transforms.Resize(256),
-                    # transforms.CenterCrop(224),
-                    transforms.Resize(224),
+                    transforms.Resize(256),
+                    transforms.RandomCrop(224),
+                    # transforms.Resize(224),
                     transforms.ToTensor(),
                     normalize,
                  ])

@@ -228,6 +228,8 @@ if __name__ == '__main__':
                         help='use pre-trained model')
     parser.add_argument('-o','--others', default=False,
                         help='use local cnn implementation')
+    parser.add_argument('--resume', type=str, metavar='PATH',
+                        help='path to latest checkpoint (default: none)')
     global args, best_prec1
     args = parser.parse_args()
 
@@ -315,6 +317,12 @@ if __name__ == '__main__':
     # net.classifier = nn.Sequential(*(net.classifier[i] for i in
                                        # range(4)))
     net = net.to(device)
+    if args.resume:
+        if os.path.isfile(args.resume):
+            print("=> loading checkpoint '{}'".format(args.resume))
+            net.load_state_dict(torch.load(args.load_path, map_location='cuda'))
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0.0005)
     scheduler = StepLR(optimizer, step_size=12, gamma=1)

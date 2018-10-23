@@ -60,7 +60,8 @@ def train(mode,device,sheduler,epoches,train_loader,val_loader,testloader):
         test_accuracy = eval_net(net, testloader)
         test_accuracies.append(test_accuracy)
         val_accuracies.append(val_accuracy)
-        print('%dth epoch, train loss: %.3f, validation loss:%.3f, test accur:%.4f, val accur:%.4f' % (epoch + 1, train_loss, val_loss,test_accuracy,val_accuracy))
+        print('%dth epoch, train loss: %.3f, validation loss:%.3f, test accur:%.4f, val accur:%.4f' %
+              (epoch + 1, train_loss, val_loss,test_accuracy,val_accuracy))
         if test_accuracy > best_accur:
             best_accur = test_accuracy
             torch.save(net.state_dict(), args.model+'_'+'best_accur.pth')
@@ -249,15 +250,14 @@ if __name__ == '__main__':
         ])
     test_transform = transforms.Compose(
                 [
-                    # resize,
-                    # transforms.Resize(256),
+                    transforms.Resize(256),
                     transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     normalize,
                  ])
     val_transform = transforms.Compose(
                 [
-                    transforms.RandomResizedCrop (224),
+                    transforms.RandomResizedCrop(224),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,

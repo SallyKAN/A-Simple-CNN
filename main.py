@@ -320,7 +320,7 @@ if __name__ == '__main__':
     if args.resume:
         if os.path.isfile(args.resume):
             print("=> loading checkpoint '{}'".format(args.resume))
-            net.load_state_dict(torch.load(args.load_path, map_location='cuda'))
+            net.load_state_dict(torch.load(args.resume, map_location='cuda'))
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
     criterion = nn.CrossEntropyLoss()

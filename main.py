@@ -246,9 +246,9 @@ if __name__ == '__main__':
                                      std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-            # transforms.RandomResizedCrop(448),
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
+            transforms.RandomResizedCrop(448),
+            # transforms.Resize(256),
+            # transforms.CenterCrop(224),
             # transforms.RandomResizedCrop(299),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
@@ -259,15 +259,16 @@ if __name__ == '__main__':
                     # transforms.Resize(300),
                     # transforms.CenterCrop(299),
                     # transforms.RandomResizedCrop(512),
-                    transforms.Resize(256),
-                    transforms.CenterCrop(224),
+                    transforms.Resize(512),
+                    transforms.CenterCrop(448),
                     transforms.ToTensor(),
                     normalize,
                  ])
     val_transform = transforms.Compose(
                 [
-                    transforms.Resize(256),
-                    transforms.CenterCrop(224),
+                    # transforms.Resize(256),
+                    # transforms.CenterCrop(224),
+                    transforms.RandomResizedCrop(448),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,
@@ -282,6 +283,7 @@ if __name__ == '__main__':
         'alexnet': models.alexnet,
         'vgg16_bn': models.vgg16_bn,
         'vgg11': models.vgg11,
+        'vgg11_2': VGG('VGG11'),
         'vgg13': models.vgg13,
         'vgg16': models.vgg16,
         'vgg19': models.vgg19,

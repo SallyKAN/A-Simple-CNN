@@ -244,25 +244,25 @@ if __name__ == '__main__':
     train_transform = transforms.Compose(
         [
             # transforms.RandomResizedCrop(224),
-            transforms.RandomResizedCrop(512),
+            transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
         ])
     test_transform = transforms.Compose(
                 [
-                    # transforms.Resize(256),
-                    # transforms.CenterCrop(224),
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
                     # transforms.RandomResizedCrop(512),
-                    transforms.Resize(544),
-                    transforms.CenterCrop(512),
+                    # transforms.Resize(54),
+                    # transforms.CenterCrop(512),
                     transforms.ToTensor(),
                     normalize,
                  ])
     val_transform = transforms.Compose(
                 [
-                    # transforms.RandomResizedCrop(224),
-                    transforms.RandomResizedCrop(512),
+                    transforms.RandomResizedCrop(224),
+                    # transforms.RandomResizedCrop(512),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,

@@ -35,22 +35,7 @@ def parse_args():
     pargs = parser.parse_args()
     return pargs
 
-# Creat logs. DO NOT CHANGE THIS PART.
-def create_logger(final_output_path):
-    log_file = '{}.log'.format(time.strftime('%Y-%m-%d-%H-%M'))
-    head = '%(asctime)-15s %(message)s'
-    logging.basicConfig(filename=os.path.join(final_output_path, log_file),
-                        format=head)
-    clogger = logging.getLogger()
-    clogger.setLevel(logging.INFO)
-    # add handler
-    # print to stdout and log file
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    clogger.addHandler(ch)
-    return clogger
+
 
 def eval_net(net, loader, logging):
     net = net.eval()
@@ -86,9 +71,6 @@ if not os.path.exists(args.output_path):
     os.makedirs(args.output_path)
 # print('using args:\n', args)
 
-logger = create_logger(args.output_path)
-logger.info('using args:')
-logger.info(args)
 
 # DO NOT change codes above this line
 # ==================================

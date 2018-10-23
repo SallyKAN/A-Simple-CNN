@@ -11,6 +11,7 @@ import time as time
 from torchvision.datasets import ImageFolder
 import argparse
 import torchvision.models as models
+from vgg import VGG
 import os
 
 
@@ -225,6 +226,8 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, required=True)
     parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                         help='use pre-trained model')
+    parser.add_argument('-o','--others', default=False,
+                        help='use local cnn implementation')
     global args, best_prec1
     args = parser.parse_args()
 
@@ -244,15 +247,15 @@ if __name__ == '__main__':
     train_transform = transforms.Compose(
         [
             # transforms.RandomResizedCrop(224),
-            transforms.RandomResizedCrop(224),
+            transforms.RandomResizedCrop(299),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
         ])
     test_transform = transforms.Compose(
                 [
-                    transforms.Resize(256),
-                    transforms.CenterCrop(224),
+                    transforms.Resize(300),
+                    transforms.CenterCrop(299),
                     # transforms.RandomResizedCrop(512),
                     # transforms.Resize(54),
                     # transforms.CenterCrop(512),
@@ -261,7 +264,7 @@ if __name__ == '__main__':
                  ])
     val_transform = transforms.Compose(
                 [
-                    transforms.RandomResizedCrop(224),
+                    transforms.RandomResizedCrop(299),
                     # transforms.RandomResizedCrop(512),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
@@ -274,13 +277,14 @@ if __name__ == '__main__':
     print('Batch size: %d, lr: %.5f, epoches: %d' % (batch_size, lr,epoches))
     # net = torchvision.models.resnet18(pretrained=True)
     model = {
-        'alexnet': models.alexnet(),
+        'alexnet': models.alexnet,
         'vgg16': models.vgg16,
         'vgg16_bn': models.vgg16_bn,
         'vgg11': models.vgg11,
         'vgg13': models.vgg13,
         'vgg16': models.vgg16,
         'vgg19': models.vgg19,
+        'vgg19_2': VGG('VGG19'),
         'squeezenet': models.squeezenet1_0,
         'densenet121': models.densenet161,
         'densenet169': models.densenet169,
@@ -297,6 +301,8 @@ if __name__ == '__main__':
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.model))
         net = model[args.model](pretrained=True)
+    elif args.others:
+        net = model[args.model]
     else:
         print("=> using pre-trained model '{}'".format(args.model))
         net = model[args.model]()

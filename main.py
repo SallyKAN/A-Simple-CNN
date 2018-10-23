@@ -246,26 +246,28 @@ if __name__ == '__main__':
                                      std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-            # transforms.RandomResizedCrop(224),
-            transforms.RandomResizedCrop(299),
+            # transforms.RandomResizedCrop(448),
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            # transforms.RandomResizedCrop(299),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
         ])
     test_transform = transforms.Compose(
                 [
-                    transforms.Resize(300),
-                    transforms.CenterCrop(299),
+                    # transforms.Resize(300),
+                    # transforms.CenterCrop(299),
                     # transforms.RandomResizedCrop(512),
-                    # transforms.Resize(54),
-                    # transforms.CenterCrop(512),
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     normalize,
                  ])
     val_transform = transforms.Compose(
                 [
-                    transforms.RandomResizedCrop(299),
-                    # transforms.RandomResizedCrop(512),
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,
@@ -278,7 +280,6 @@ if __name__ == '__main__':
     # net = torchvision.models.resnet18(pretrained=True)
     model = {
         'alexnet': models.alexnet,
-        'vgg16': models.vgg16,
         'vgg16_bn': models.vgg16_bn,
         'vgg11': models.vgg11,
         'vgg13': models.vgg13,
@@ -308,6 +309,9 @@ if __name__ == '__main__':
         net = model[args.model]()
 
     mode = 'modified'
+    # net.avgpool = nn.AdaptiveAvgPool2d(1)
+    # net.classifier = nn.Sequential(*(net.classifier[i] for i in
+                                       # range(4)))
     net = net.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0.0005)

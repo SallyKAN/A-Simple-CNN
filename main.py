@@ -254,6 +254,7 @@ if __name__ == '__main__':
                     # transforms.Resize(256),
                     # transforms.CenterCrop(224),
                     # transforms.RandomResizedCrop(512),
+                    transforms.Resize(544),
                     transforms.CenterCrop(512),
                     transforms.ToTensor(),
                     normalize,

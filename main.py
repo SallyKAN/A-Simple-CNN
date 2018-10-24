@@ -327,7 +327,7 @@ if __name__ == '__main__':
             print("=> no checkpoint found at '{}'".format(args.resume))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0.0005)
-    scheduler = StepLR(optimizer, step_size=12, gamma=1)
+    scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
     # scheduler = StepLR(optimizer, step_size=12, gamma=0.8)
     train_losses, val_losses, test_accuracies, val_accuracies = train(mode, device, scheduler,
                                                                       epoches, train_loader,

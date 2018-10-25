@@ -249,10 +249,11 @@ if __name__ == '__main__':
                                      std=[0.229, 0.224, 0.225])
     train_transform = transforms.Compose(
         [
-            transforms.RandomResizedCrop(448),
+            # transforms.RandomResizedCrop(448),
             # transforms.Resize(256),
             # transforms.CenterCrop(224),
             # transforms.RandomResizedCrop(299),
+            transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
@@ -262,8 +263,10 @@ if __name__ == '__main__':
                     # transforms.Resize(300),
                     # transforms.CenterCrop(299),
                     # transforms.RandomResizedCrop(512),
-                    transforms.Resize(512),
-                    transforms.CenterCrop(448),
+                    # transforms.Resize(512),
+                    # transforms.CenterCrop(448),
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     normalize,
                  ])
@@ -271,7 +274,8 @@ if __name__ == '__main__':
                 [
                     # transforms.Resize(256),
                     # transforms.CenterCrop(224),
-                    transforms.RandomResizedCrop(448),
+                    # transforms.RandomResizedCrop(448),
+                    transforms.RandomResizedCrop(224),
                     transforms.RandomHorizontalFlip(),
                     transforms.ToTensor(),
                     normalize,

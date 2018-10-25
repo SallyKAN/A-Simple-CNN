@@ -133,7 +133,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 # define your optimizer or scheduler below.
 
 print('==> Building model..')
-net = torchvision.models.vgg16()
+net = torchvision.models.vgg19()
 ####################################
 
 # ==================================
